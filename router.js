@@ -1,5 +1,5 @@
 const express = require('express')
-// imort admin middleware
+// import 
 const adminMiddleware = require('./middleware/adminMiddleware')
 const userMiddleware = require('./middleware/userMiddleware')
 const doctorMiddleware = require('./middleware/doctorMiddleware')
@@ -11,6 +11,8 @@ const router = new express.Router()
 
 // add doctor
 router.post('/add-doctor',adminMiddleware,multerConfig.single("image"),adminController.addDoctor)
+
+
 
 // admin login
 router.post('/adminlogin',adminController.adminLogin)
@@ -55,7 +57,17 @@ router.get('/doctor-appointment',doctorMiddleware,doctorController.doctorAppoint
 
 // canceldoctor appointment and complete Appointment
 router.post('/complete-appointment',doctorMiddleware,doctorController.completeAppointment)
+
 router.post('/cancel-doctorappointment',doctorMiddleware,doctorController.cancelDoctorAppointment)
+
+// add documents
+router.post('/add-document',userMiddleware,multerConfig.single("docimage"),userController.addDocuments)
+
+// display documents
+router.get('/display-document',userController.displaydocuments)
+
+// remove documents
+router.delete('/remove-documents/:id',userMiddleware,userController.removeUserDocuments)
 
 
 module.exports = router

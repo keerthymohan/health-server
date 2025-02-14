@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken')
 const users = require('../models/userModel')
 const doctors = require('../models/doctorModel');
 const appointments = require('../models/appointmentModel');
+const documents = require('../models/documentModel');
 
 exports.register = async(req,res)=>{
     console.log('inside register function');
@@ -188,5 +189,50 @@ exports.cancelAppointment = async (req, res) => {
     } catch (error) {
         res.status(401).json(error)
 
+    }
+}
+
+exports.addDocuments = async(req,res)=>{
+    console.log(`inside add document controller`);
+    const {title} = req.body
+    const docimage = req.file.filename
+    try{
+        const uploadDocuments = new documents({
+            title,
+            docimage
+        })
+        await uploadDocuments.save()
+        res.status(200).json(uploadDocuments)
+
+        
+    }catch(error){
+        res.status(401).json(`documents uploaded failed due to ${error}`)
+    }
+    
+}
+
+
+// display documents
+exports.displaydocuments = async(req,res)=>{
+    try{
+        const displayalldocuments = await documents.find()
+        res.status(200).json(displayalldocuments)
+
+    }catch(error) {
+        res.status(401).json(error)
+    }
+
+}
+
+// delete documents
+exports.removeUserDocuments = async(req,res)=>{
+    const {id} = req.params
+    try{
+        await documents.findByIdAndDelete({_id:id})
+        res.status(200).json(`Documents Deleted Successfully`)
+
+
+    }catch (error){
+        res.status(401).json(error)
     }
 }
